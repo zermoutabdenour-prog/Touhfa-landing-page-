@@ -705,10 +705,12 @@ img{display:block;max-width:100%;}
 <!-- ============ NAV ============ -->
 <nav class="nav">
   <div class="nav-inner">
-    <div class="nav-brand">
-      <img src="logo.jpeg" alt="TOUHFA logo">
-      <span class="nav-brand-name">TOUHFA</span>
-    </div>
+  <div class="nav-brand">
+    <a href="#top">
+        <img src="logo.jpeg" alt="TOUHFA logo">
+    </a>
+    <span class="nav-brand-name">TOUHFA</span>
+</div>
     <a href="#order" class="nav-cta">اطلبي الآن</a>
   </div>
 </nav>
@@ -1410,5 +1412,5 @@ function submitOrder(e){
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.style.animation='fadeUp .9s ease both';io.unobserve(e.target);}}),{threshold:.12});
 document.querySelectorAll('.promise-card,.ing-card,.review-card,.how-step,.faq-item,.mid-buy-card').forEach(el=>{el.style.opacity='0';io.observe(el);});
 </script>
-</body>
+<body id="top">
 </html>
