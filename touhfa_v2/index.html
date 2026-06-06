@@ -1373,10 +1373,10 @@ function submitOrder(e){
 
   // Google Form auto-save
   const formData=new FormData();
-  formData.append('entry.284037044',data.name);
+  formData.append('entry.284037044', data.name);
   formData.append('entry.809725892',data.phone);
-  formData.append('entry.382005418',data.wilaya);
-  formData.append('entry.1604374303',data.city);
+  formData.append('entry.284037044', data.name);
+  formData.append('entry.1604374303', data.city);
   formData.append('entry.1973156820',data.address+' | الكمية: '+data.qty+' | المجموع: '+data.total);
   formData.append('entry.1256755298',data.qty);
   fetch('https://docs.google.com/forms/d/e/1FAIpQLSeAaBaUI8dk2eAQWrNlWOAnuKWRdK4haeqZUbKKNMNrn_fTvw/formResponse',{method:'POST',mode:'no-cors',body:formData});
