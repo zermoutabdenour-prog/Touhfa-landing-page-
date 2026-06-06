@@ -1385,7 +1385,16 @@ function submitOrder(e){
   formData.append('entry.1973156820',data.address+' | الكمية: '+data.qty+' | المجموع: '+data.total);
   formData.append('entry.1256755298',data.qty);
   formData.append('entry.374195022', data.notes);
-  fetch('https://docs.google.com/forms/d/e/1FAIpQLSeAaBaUI8dk2eAQWrNlWOAnuKWRdK4haeqZUbKKNMNrn_fTvw/formResponse',{method:'POST',mode:'no-cors',body:formData});
+  fetch('https://script.google.com/macros/s/AKfycbwR63LyXt0Pd38mzs22W3bnvM1D0RUgQhO0e6iVKCbvu-7IGTZ5PmyMUGE2UOgGGPzFOQ/exec', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(data)
+})
+.then(response => response.json())
+.then(result => console.log(result))
+.catch(error => console.error(error));
 
   // WhatsApp confirm
   const msg=`طلب جديد من TOUHFA 🌿%0A%0Aالاسم: ${data.name}%0Aالهاتف: ${data.phone}%0Aالولاية: ${data.wilaya}%0Aالبلدية: ${data.city}%0Aالعنوان: ${data.address}%0Aالكمية: ${data.qty} قارورة%0Aالمجموع: ${data.total}`;
