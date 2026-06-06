@@ -471,6 +471,14 @@ img{display:block;max-width:100%;}
 .ba-card.before .ba-label{right:20px;}
 .ba-card.after .ba-label{right:20px;color:var(--gold);}
 .ba-placeholder{
+  .ba-img{
+  width:100%;
+  height:320px;
+  object-fit:cover;
+  border-radius:18px;
+  display:block;
+  box-shadow:0 18px 45px rgba(0,0,0,.18);
+}
   font-family:'Cormorant Garamond',serif;font-size:1.1rem;
   color:rgba(243,236,221,.45);text-align:center;padding:30px;
 }
@@ -1022,11 +1030,11 @@ img{display:block;max-width:100%;}
     <div class="ba-cards">
       <div class="ba-card before">
         <span class="ba-label">قبل</span>
-        <div class="ba-placeholder">صورة الشعر قبل الاستخدام<br><small style="opacity:.7;">(أضيفي صورة من زبوناتك)</small></div>
+        <img src="befor.png" alt="قبل الاستخدام" class="ba-img">
       </div>
       <div class="ba-card after">
         <span class="ba-label">بعد 4 أسابيع</span>
-        <div class="ba-placeholder">صورة الشعر بعد 4 أسابيع<br><small style="opacity:.7;">(أضيفي صورة من زبوناتك)</small></div>
+        <img src="after.png" alt="بعد 4 أسابيع" class="ba-img">
       </div>
     </div>
     <p class="ba-note">* النتائج تختلف من شخص لآخر. تُحفة منتج طبيعي يحتاج وقتاً لإظهار أفضل ما عنده.</p>
