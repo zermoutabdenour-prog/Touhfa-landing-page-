@@ -206,8 +206,12 @@ img{display:block;max-width:100%;}
   filter:blur(20px);
 }
 .hero-bottle{
-  width:105%;filter:drop-shadow(0 40px 60px rgba(0,0,0,.7)) drop-shadow(0 0 30px rgba(201,162,75,.25));
-  animation:floatBottle 6s ease-in-out infinite;position:relative;z-index:2;
+    width:100%;
+    max-width:420px;
+    height:auto;
+    border-radius:24px;
+    object-fit:cover;
+    display:block;
 }
 @keyframes floatBottle{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
 .badge-floating{
@@ -762,7 +766,9 @@ img{display:block;max-width:100%;}
             <span class="num">50</span>
             <span class="lbl">مل<br>فاخر</span>
           </div>
-          <img class="hero-bottle" src="bottle.png" alt="TOUHFA Hair Oil">
+          <video class="hero-bottle" autoplay muted loop playsinline>
+    <source src="heroproduct.mp4" type="video/mp4">
+</video>
         </div>
       </div>
     </div>
@@ -779,7 +785,7 @@ img{display:block;max-width:100%;}
       </div>
       <div class="trust-item">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3l-4 4-4-4"/></svg>
-        <div>توصيل 48 ولاية</div>
+        <div>توصيل 58 ولاية</div>
       </div>
       <div class="trust-item">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg>
