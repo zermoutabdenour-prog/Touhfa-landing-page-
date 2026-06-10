@@ -739,6 +739,46 @@ img{display:block;max-width:100%;}
   .qty-row,.bundles{grid-template-columns:1fr;}
   .trust-badges{grid-template-columns:repeat(2,1fr);}
 }
+/* FIX: restore button visibility */
+.btn-primary,
+.nav-cta,
+.mid-cta,
+.story .btn-primary,
+.offer .btn-primary,
+a.btn-primary{
+  background:linear-gradient(135deg,#E4C376,#C9A24B) !important;
+  color:#0B2A1E !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  filter:none !important;
+  mix-blend-mode:normal !important;
+  pointer-events:auto !important;
+}
+
+.btn-secondary{
+  color:#F5EEDC !important;
+  opacity:1 !important;
+  visibility:visible !important;
+}
+
+/* Fix huge icons */
+svg{
+  max-width:54px;
+  max-height:54px;
+}
+
+/* Fix middle product image */
+.mid-buy-img{
+  max-width:430px !important;
+  height:430px !important;
+  overflow:hidden !important;
+}
+
+.mid-buy-img img{
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
+}
 </style>
 </head>
 <body>
