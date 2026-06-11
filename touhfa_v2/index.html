@@ -802,6 +802,30 @@ svg{
   height:100% !important;
   object-fit:cover !important;
 }
+.sticky-cta{
+  display:block !important;
+  position:fixed !important;
+  left:12px !important;
+  right:12px !important;
+  bottom:calc(12px + env(safe-area-inset-bottom)) !important;
+  z-index:999999 !important;
+  background:transparent !important;
+}
+
+.sticky-cta a{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:100% !important;
+  padding:16px 20px !important;
+  border-radius:18px !important;
+  background:linear-gradient(135deg,#E4C376,#C9A24B) !important;
+  color:#082E1E !important;
+  font-weight:900 !important;
+  font-size:1rem !important;
+  text-decoration:none !important;
+  box-shadow:0 12px 35px rgba(201,162,75,.45) !important;
+}
 </style>
 </head>
 <body>
