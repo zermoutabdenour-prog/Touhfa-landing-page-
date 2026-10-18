@@ -34,6 +34,8 @@
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
+#order{scroll-margin-top:100px;}
+
 body{
   font-family:'Cairo',sans-serif;
   background:var(--paper);
@@ -1482,6 +1484,18 @@ src="https://www.facebook.com/tr?id=1621061429740653&ev=PageView&noscript=1"
 </div>
   
 <script>
+// Make every order CTA navigate reliably to the customer details form.
+document.querySelectorAll('a[href="#order"]').forEach(link=>{
+  link.addEventListener('click',event=>{
+    const target=document.getElementById('order');
+    if(!target)return;
+    event.preventDefault();
+    target.scrollIntoView({behavior:'smooth',block:'start'});
+    if(window.history && window.history.replaceState){
+      window.history.replaceState(null,'','#order');
+    }
+  });
+});
 // Sync both buy boxes (middle + bottom)
 function selectQty(qty, price){
   document.querySelectorAll('.qty-option').forEach(o=>o.classList.toggle('selected',+o.dataset.qty===+qty));
