@@ -1524,48 +1524,85 @@ document.querySelectorAll('.faq-item').forEach(item=>{
   });
 });
 
-// Order form
+// Order flow: retain customer data, provide a reliable WhatsApp fallback,
+// and do not claim that an opaque Google Apps Script request was confirmed.
+const TOUHFA_ORDER_ENDPOINT='https://script.google.com/macros/s/AKfycbwR63LyXt0Pd38mzs22W3bnvM1D0RUgQhO0e6iVKCbvu-7IGTZ5PmyMUGE2UOgGGPzFOQ/exec';
+const TOUHFA_WHATSAPP='213541628398';
+const TOUHFA_PRICES={'1':2990,'2':4500,'3':6730};
+let touhfaSubmitting=false;
+function touhfaPixel(event,params){
+  if(typeof window.fbq==='function')window.fbq('track',event,params);
+}
 function submitOrder(e){
   e.preventDefault();
-  const f=e.target;
+  const f=e.currentTarget;
+  if(touhfaSubmitting || !f.reportValidity())return false;
+  const qty=String(f.querySelector('input[name="qty"]:checked')?.value || '1');
+  const amount=TOUHFA_PRICES[qty];
+  if(!amount)return false;
   const data={
-  qty:f.qty.value,
-  name:f.name.value,
-  phone:f.phone.value,
-  wilaya:f.wilaya.value,
-  city:f.city.value,
-  address:f.address.value,
-  notes:f.notes ? f.notes.value : '',
-  total:document.getElementById('totalAmount').textContent
-};
-  
-  // Google Form auto-save
-  const formData=new FormData();
-  formData.append('entry.284037044', data.name);
-  formData.append('entry.809725892',data.phone);
-  formData.append('entry.382005418', data.wilaya);
-  formData.append('entry.1604374303', data.city);
-  formData.append('entry.1973156820',data.address+' | الكمية: '+data.qty+' | المجموع: '+data.total);
-  formData.append('entry.1256755298',data.qty);
-  formData.append('entry.374195022', data.notes);
-  fetch('https://script.google.com/macros/s/AKfycbwR63LyXt0Pd38mzs22W3bnvM1D0RUgQhO0e6iVKCbvu-7IGTZ5PmyMUGE2UOgGGPzFOQ/exec', {
-  method: 'POST',
-  mode: 'no-cors',
-  body: JSON.stringify(data)
-});
-
-  // WhatsApp confirm
-  const msg=`طلب جديد من TOUHFA 🌿%0A%0Aالاسم: ${data.name}%0Aالهاتف: ${data.phone}%0Aالولاية: ${data.wilaya}%0Aالبلدية: ${data.city}%0Aالعنوان: ${data.address}%0Aالكمية: ${data.qty} قارورة%0Aالمجموع: ${data.total}`;
-  setTimeout(()=>window.open(`https://wa.me/213541628398?text=${msg}`,'_blank'),500);
-
-  // Thank you
-  f.innerHTML=`<div style="text-align:center;padding:40px 20px;">
-    <div style="font-size:3rem;margin-bottom:20px;">🌿</div>
-    <h3 style="font-family:'Marhey',cursive;font-size:1.8rem;color:var(--green);margin-bottom:12px;">شكراً ${data.name}!</h3>
-    <p style="color:var(--ink-soft);margin-bottom:8px;">تم استلام طلبك بنجاح ✓</p>
-    <p style="color:var(--ink-soft);">سنتّصل بك خلال 24 ساعة لتأكيد الطلب</p>
-    <p style="color:var(--gold-deep);margin-top:20px;font-size:.9rem;">إذا لم يفتح واتساب تلقائياً، تواصل معنا مباشرة 💚</p>
-  </div>`;
+    orderId:'TOUHFA-'+Date.now()+'-'+Math.random().toString(36).slice(2,8).toUpperCase(),
+    qty:qty,
+    name:f.elements.namedItem('name').value.trim(),
+    phone:f.elements.namedItem('phone').value.trim(),
+    wilaya:f.elements.namedItem('wilaya').value,
+    city:f.elements.namedItem('city').value.trim(),
+    address:f.elements.namedItem('address').value.trim(),
+    notes:f.elements.namedItem('notes')?.value.trim() || '',
+    total:amount.toLocaleString('en-US')+' دج',
+    totalDZD:amount
+  };
+  if(!data.name || !data.phone || !data.wilaya || !data.city || !data.address){
+    f.reportValidity();return false;
+  }
+  const msg=[
+    'طلب جديد من TOUHFA 🌿',
+    'رقم الطلب: '+data.orderId,
+    'الاسم: '+data.name,
+    'الهاتف: '+data.phone,
+    'الولاية: '+data.wilaya,
+    'البلدية: '+data.city,
+    'العنوان: '+data.address,
+    'الكمية: '+data.qty+' قارورة',
+    'المجموع: '+data.total,
+    data.notes ? 'ملاحظات: '+data.notes : ''
+  ].filter(Boolean).join('\n');
+  const whatsappUrl='https://wa.me/'+TOUHFA_WHATSAPP+'?text='+encodeURIComponent(msg);
+  touhfaSubmitting=true;
+  const submitButton=f.querySelector('button[type="submit"]');
+  if(submitButton){submitButton.disabled=true;submitButton.setAttribute('aria-busy','true');}
+  // Track a checkout attempt, not a Purchase or confirmed Lead.
+  touhfaPixel('InitiateCheckout',{value:amount,currency:'DZD',content_ids:['TOUHFA-50ML'],num_items:Number(qty)});
+  // Open on the user's click so pop-up blockers are less likely to interfere.
+  const whatsappWindow=window.open(whatsappUrl,'_blank','noopener,noreferrer');
+  const backup=document.createElement('div');
+  backup.setAttribute('role','status');
+  backup.style.cssText='padding:20px;text-align:center;background:#f4efdf;border-radius:16px;margin-top:16px;';
+  const heading=document.createElement('p');
+  heading.textContent='تم تجهيز طلبك. أكملي الإرسال عبر واتساب للتأكيد.';
+  const link=document.createElement('a');
+  link.href=whatsappUrl;
+  link.target='_blank';
+  link.rel='noopener noreferrer';
+  link.textContent='اضغطي هنا لإرسال الطلب عبر واتساب';
+  link.style.cssText='display:inline-block;margin-top:12px;color:#1B3A2B;font-weight:800;text-decoration:underline;';
+  backup.append(heading,link);
+  f.appendChild(backup);
+  // The endpoint uses no-cors; browser cannot read an acknowledgement.
+  // Therefore we must not display a "saved successfully" message.
+  fetch(TOUHFA_ORDER_ENDPOINT,{
+    method:'POST',
+    mode:'no-cors',
+    headers:{'Content-Type':'text/plain;charset=UTF-8'},
+    body:JSON.stringify(data),
+    keepalive:true
+  }).catch(()=>{
+    const warning=document.createElement('p');
+    warning.textContent='تعذّر إرسال نسخة الطلب إلى النظام. يرجى إكمال الطلب عبر واتساب.';
+    warning.style.cssText='color:#9b3838;margin-top:10px;';
+    backup.appendChild(warning);
+  });
+  if(!whatsappWindow)link.focus();
   return false;
 }
 
