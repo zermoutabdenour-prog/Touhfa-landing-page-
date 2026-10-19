@@ -1347,7 +1347,7 @@ src="https://www.facebook.com/tr?id=1621061429740653&ev=PageView&noscript=1"
           </div>
         </div>
 
-        <div class="form-row">
+        <div class="form-row" id="customerDetails" style="scroll-margin-top:90px;">
           <label>الاسم الكامل <span class="req">*</span></label>
           <input type="text" name="name" required placeholder="مثال: أمينة بوخالفة">
         </div>
@@ -1508,11 +1508,27 @@ function selectQty(qty, price){
   const sticky=document.getElementById('stickyOrderCta');
   if(sticky)sticky.textContent='اطلبيها الآن — '+Number(price).toLocaleString('en-US')+' دج';
 }
+// On mobile, selecting an offer must reveal the customer information immediately.
+function revealCustomerDetails(){
+  const details=document.getElementById('customerDetails');
+  if(!details)return;
+  // A small delay lets the selected quantity and price update before scrolling.
+  window.setTimeout(()=>{
+    const top=details.getBoundingClientRect().top+window.scrollY-80;
+    window.scrollTo({top:Math.max(0,top),behavior:'smooth'});
+  },80);
+}
 document.querySelectorAll('.qty-option').forEach(opt=>{
-  opt.addEventListener('click',()=>selectQty(opt.dataset.qty,opt.dataset.price));
+  opt.addEventListener('click',()=>{
+    selectQty(opt.dataset.qty,opt.dataset.price);
+    revealCustomerDetails();
+  });
 });
 document.querySelectorAll('.bundle').forEach(b=>{
-  b.addEventListener('click',()=>selectQty(b.dataset.qty,b.dataset.price));
+  b.addEventListener('click',()=>{
+    selectQty(b.dataset.qty,b.dataset.price);
+    revealCustomerDetails();
+  });
 });
 
 // FAQ accordion
