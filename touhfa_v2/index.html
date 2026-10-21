@@ -991,7 +991,7 @@ src="https://www.facebook.com/tr?id=1621061429740653&ev=PageView&noscript=1"
       <div>
         <div class="video-wrap">
           <video controls playsinline preload="none" poster="HEROVIDEOBACK.png">
-            <source data-src="ads-video-story.mp4" type="video/mp4">
+            <source src="ads-video-story.mp4" type="video/mp4">
             المتصفح لا يدعم تشغيل الفيديو
           </video>
         </div>
@@ -1650,18 +1650,6 @@ if (heroVideo) {
     loadHero();
   }
 }
-// Defer the story video download until a visitor presses play.
-document.querySelectorAll('.video-wrap video').forEach(video => {
-  video.addEventListener('pointerdown', () => {
-    const source = video.querySelector('source[data-src]');
-    if (source) {
-      source.src = source.dataset.src;
-      source.removeAttribute('data-src');
-      video.load();
-    }
-  }, { once: true });
-});
-
 // Scroll reveal
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.style.animation='fadeUp .9s ease both';io.unobserve(e.target);}}),{threshold:.12});
 document.querySelectorAll('.promise-card,.ing-card,.review-card,.how-step,.faq-item,.mid-buy-card').forEach(el=>{el.style.opacity='0';io.observe(el);});
