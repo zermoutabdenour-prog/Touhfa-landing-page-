@@ -905,8 +905,8 @@ src="https://www.facebook.com/tr?id=1621061429740653&ev=PageView&noscript=1"
             <span class="num">50</span>
             <span class="lbl">مل<br>فاخر</span>
           </div>
-          <video class="hero-bottle" autoplay muted loop playsinline>
-    <source src="heroproduct.mp4" type="video/mp4">
+          <video class="hero-bottle" muted loop playsinline preload="none" poster="product image.png" aria-label="TOUHFA product video">
+    <source data-src="heroproduct.mp4" type="video/mp4">
 </video>
         </div>
       </div>
@@ -990,8 +990,8 @@ src="https://www.facebook.com/tr?id=1621061429740653&ev=PageView&noscript=1"
       </div>
       <div>
         <div class="video-wrap">
-          <video controls playsinline poster="HEROVIDEOBACK.png">
-            <source src="ads-video-story.mp4" type="video/mp4">
+          <video controls playsinline preload="none" poster="HEROVIDEOBACK.png">
+            <source data-src="ads-video-story.mp4" type="video/mp4">
             المتصفح لا يدعم تشغيل الفيديو
           </video>
         </div>
@@ -1621,6 +1621,46 @@ function submitOrder(e){
   if(!whatsappWindow)link.focus();
   return false;
 }
+
+
+// Load the hero animation only when it is near the viewport.
+// Keep the lightweight product image visible until the video is ready.
+const heroVideo = document.querySelector('.hero-bottle');
+if (heroVideo) {
+  const loadHero = () => {
+    const source = heroVideo.querySelector('source[data-src]');
+    if (source) {
+      source.src = source.dataset.src;
+      source.removeAttribute('data-src');
+      heroVideo.load();
+    }
+    heroVideo.play().catch(() => {}); // poster remains if autoplay is blocked
+  };
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          loadHero();
+          observer.unobserve(heroVideo);
+        }
+      }
+    }, { rootMargin: '150px' });
+    observer.observe(heroVideo);
+  } else {
+    loadHero();
+  }
+}
+// Defer the story video download until a visitor presses play.
+document.querySelectorAll('.video-wrap video').forEach(video => {
+  video.addEventListener('pointerdown', () => {
+    const source = video.querySelector('source[data-src]');
+    if (source) {
+      source.src = source.dataset.src;
+      source.removeAttribute('data-src');
+      video.load();
+    }
+  }, { once: true });
+});
 
 // Scroll reveal
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.style.animation='fadeUp .9s ease both';io.unobserve(e.target);}}),{threshold:.12});
